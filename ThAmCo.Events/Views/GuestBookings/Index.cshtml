@@ -37,13 +37,13 @@
                 @Html.DisplayFor(modelItem => item.Attended)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Edit", "Edit", new {  id = item.CustomerId, eventId = item.EventId  }) |
+                @Html.ActionLink("Details", "Details", new {  id = item.CustomerId, eventId = item.EventId  }) |
+                @Html.ActionLink("Delete", "Delete",  new {  id = item.CustomerId, eventId = item.EventId  })
             </td>
         </tr>
 }
     </tbody>
 </table>
-
+Number Of Guests :
 @Model.Count()

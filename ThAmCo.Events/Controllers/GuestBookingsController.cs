@@ -72,14 +72,14 @@ namespace ThAmCo.Events.Controllers
         }
 
         // GET: GuestBookings/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, int? eventId)
         {
-            if (id == null)
+            if (id == null || eventId == null)
             {
                 return NotFound();
             }
 
-            var guestBooking = await _context.Guests.FindAsync(id);
+            var guestBooking = await _context.Guests.FindAsync(id, eventId);
             if (guestBooking == null)
             {
                 return NotFound();
