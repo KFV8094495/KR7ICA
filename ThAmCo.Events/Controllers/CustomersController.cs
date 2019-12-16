@@ -33,6 +33,36 @@ namespace ThAmCo.Events.Controllers
             }
 
             var customer = await _context.Customers
+
+                //.Include(p => p.Nationality) - not required as explicit reference if made in the projection (select)
+                .Select(p => new CustomerDetailViewModel
+                {
+                    Customer = p.customerId,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    Birthday = p.Birthday,
+                    NationalityId = p.NationalityId,
+                    Nationality = p.Nationality.Title,
+                    MoviesActed = _context.MovieActors
+                        .Where(ma => ma.PersonId == p.PersonId)
+                        .Select(ma => new PersonMovieViewModel
+                        {
+                            MovieId = ma.MovieId,
+                            ReleaseDate = ma.Movie.ReleaseDate,
+                            Title = ma.Movie.Title
+                        }),
+                    MoviesDirected = _context.Movies
+                        .Where(m => m.DirectorId == p.PersonId)
+                        .Select(ma => new PersonMovieViewModel
+                        {
+                            MovieId = ma.MovieId,
+                            ReleaseDate = ma.ReleaseDate,
+                            Title = ma.Title
+                        })
+                })
+
+
+
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (customer == null)
             {
