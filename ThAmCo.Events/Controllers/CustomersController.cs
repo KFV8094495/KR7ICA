@@ -34,34 +34,6 @@ namespace ThAmCo.Events.Controllers
 
             var customer = await _context.Customers
 
-                //.Include(p => p.Nationality) - not required as explicit reference if made in the projection (select)
-                .Select(p => new CustomerDetailViewModel
-                {
-                    Customer = p.customerId,
-                    FirstName = p.FirstName,
-                    LastName = p.LastName,
-                    Birthday = p.Birthday,
-                    NationalityId = p.NationalityId,
-                    Nationality = p.Nationality.Title,
-                    MoviesActed = _context.MovieActors
-                        .Where(ma => ma.PersonId == p.PersonId)
-                        .Select(ma => new PersonMovieViewModel
-                        {
-                            MovieId = ma.MovieId,
-                            ReleaseDate = ma.Movie.ReleaseDate,
-                            Title = ma.Movie.Title
-                        }),
-                    MoviesDirected = _context.Movies
-                        .Where(m => m.DirectorId == p.PersonId)
-                        .Select(ma => new PersonMovieViewModel
-                        {
-                            MovieId = ma.MovieId,
-                            ReleaseDate = ma.ReleaseDate,
-                            Title = ma.Title
-                        })
-                })
-
-
 
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (customer == null)
@@ -178,5 +150,20 @@ namespace ThAmCo.Events.Controllers
         {
             return _context.Customers.Any(e => e.Id == id);
         }
+    }
+
+    internal class CustomerDetailViewModel
+    {
+        internal object AttendDate;
+        internal object eventAttended;
+
+        public object Customer { get; set; }
+        public string FirstName { get; set; }
+        public object LastName { get; set; }
+        public object Birthday { get; set; }
+        public object NationalityId { get; set; }
+        public object Nationality { get; set; }
+        public object MoviesActed { get; set; }
+        public object MoviesDirected { get; set; }
     }
 }

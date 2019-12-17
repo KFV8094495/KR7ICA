@@ -20,7 +20,18 @@ namespace ThAmCo.Events.Models
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
+
+
         IEnumerable<CustomerEventViewModel> CustomerEvents { get; set; }
+
+        public DateTime Birthday { get; set; }
+
+        [Display(Name = "Nationality")]
+        [Required]
+        public int NationalityId { get; set; }
+
 
     }
 }
+
+
