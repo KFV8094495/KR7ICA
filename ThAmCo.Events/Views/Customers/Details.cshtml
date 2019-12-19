@@ -1,4 +1,4 @@
-﻿@model ThAmCo.Events.Data.Customer
+﻿@model ThAmCo.Events.Models.CustomerDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -33,4 +33,16 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+
+    div>
+    <h4>Events</h4>
+    @if (Model.cusEvents.Any())
+    {
+        <partial name= "_EventsDetail" for="cusEvents" />
+    }
+    else
+    {
+        <p>Not directed any movies.</p>
+    }
+</div>
 </div>

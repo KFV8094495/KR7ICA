@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ThAmCo.Events.Data;
+using ThAmCo.Events.Models;
 
 namespace ThAmCo.Events.Controllers
 {
@@ -27,15 +28,28 @@ namespace ThAmCo.Events.Controllers
         // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+       
             var customer = await _context.Customers
-
-
+                             
+                .Select(p => new CustomerDetailsViewModel
+                {
+                    Id = p.Id,
+                    Surname = p.Surname,
+                    FirstName = p.FirstName,
+                    Email = p.Email,
+                    cusEvents = _context.Events
+                    .Where(ma => ma.Id == p.Id)
+                        .Select(ma => new CustomerEventViewModel
+                        {
+                            EventId = ma.Id,
+                            Title = ma.Title,
+                            Date = ma.Date,
+                            Duration = ma.Duration,
+                            TypeId = ma.TypeId
+                        })
+                        })
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (customer == null)
             {
                 return NotFound();
@@ -49,6 +63,7 @@ namespace ThAmCo.Events.Controllers
         {
             return View();
         }
+
 
         // POST: Customers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -151,19 +166,7 @@ namespace ThAmCo.Events.Controllers
             return _context.Customers.Any(e => e.Id == id);
         }
     }
-
-    internal class CustomerDetailViewModel
-    {
-        internal object AttendDate;
-        internal object eventAttended;
-
-        public object Customer { get; set; }
-        public string FirstName { get; set; }
-        public object LastName { get; set; }
-        public object Birthday { get; set; }
-        public object NationalityId { get; set; }
-        public object Nationality { get; set; }
-        public object MoviesActed { get; set; }
-        public object MoviesDirected { get; set; }
-    }
 }
+
+
+  

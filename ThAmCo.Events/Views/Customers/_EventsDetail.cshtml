@@ -1,10 +1,10 @@
-﻿@model IEnumerable<ThAmCo.Events.Data.Event>
+﻿@model IEnumerable<ThAmCo.Events.Models.CustomerEventViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "_EventsDetail";
 }
 
-<h2>Index</h2>
+<h2>_EventsDetail</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,6 +12,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EventId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
@@ -31,6 +34,9 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.EventId)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
@@ -43,11 +49,9 @@
                 @Html.DisplayFor(modelItem => item.TypeId)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>|
-                <a asp-controller="guestBookings" asp-action="Details" asp-route-id="@item.Id">Reservations</a>|
-                <a asp-controller="Customers" asp-action="Create" asp-route-id="@item.Id">Add Customer </a>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
         </tr>
 }
