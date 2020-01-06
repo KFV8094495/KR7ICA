@@ -3,21 +3,27 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using ThAmCo.Events.Controllers;
 
 namespace ThAmCo.Events.Models
 {
-    public class VenueDto
+    public class availabilityDto
+
     {
         [Required, DataType(DataType.Date)]
-        public DateTime EventDate { get; set; }
+        public string code { get; set; }
+
+        public string name { get; set; }
+
+        public string description { get; set; }
+
+        public string capacity { get; set; }
 
         [Required, MinLength(5), MaxLength(5)]
-        public string VenueCode { get; set; }
+        public DateTime date { get; set; }
 
         [Required]
-        public string StaffId { get; set; }
+        public int costPerHou { get; set; }
 
     }
 }
-    
+ 

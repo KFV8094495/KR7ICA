@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using ThAmCo.Events.Controllers;
+using ThAmCo.Events.Models;
 
 namespace ThAmCo.Events.Data
 {
@@ -19,5 +22,6 @@ namespace ThAmCo.Events.Data
         public string TypeId { get; set; }
 
         public List<GuestBooking> Bookings { get; set; }
+       
     }
 }
