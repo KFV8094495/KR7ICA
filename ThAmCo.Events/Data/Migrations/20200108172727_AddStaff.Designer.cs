@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ThAmCo.Events.Data;
 
 namespace ThAmCo.Events.Data.Migrations
 {
     [DbContext(typeof(EventsDbContext))]
-    partial class EventsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200108172727_AddStaff")]
+    partial class AddStaff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,23 +106,21 @@ namespace ThAmCo.Events.Data.Migrations
                     );
                 });
 
-            modelBuilder.Entity("ThAmCo.Events.Data.StaffBookings", b =>
+            modelBuilder.Entity("ThAmCo.Events.Data.Staff", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Attended");
+                    b.Property<string>("Address");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<string>("StaffName");
 
-                    b.Property<string>("Location");
-
-                    b.Property<string>("Name");
+                    b.Property<string>("contact");
 
                     b.HasKey("Id");
 
-                    b.ToTable("StaffBooking");
+                    b.ToTable("Staff");
                 });
 
             modelBuilder.Entity("ThAmCo.Events.Data.staffing", b =>
@@ -144,27 +144,6 @@ namespace ThAmCo.Events.Data.Migrations
                     b.ToTable("staffing");
                 });
 
-            modelBuilder.Entity("ThAmCo.Events.Data.Staffs", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address");
-
-                    b.Property<string>("Contact");
-
-                    b.Property<string>("Email");
-
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("SurName");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Staff");
-                });
-
             modelBuilder.Entity("ThAmCo.Events.Data.GuestBooking", b =>
                 {
                     b.HasOne("ThAmCo.Events.Data.Customer", "Customer")
@@ -185,7 +164,7 @@ namespace ThAmCo.Events.Data.Migrations
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ThAmCo.Events.Data.Staffs", "staff")
+                    b.HasOne("ThAmCo.Events.Data.Staff", "staff")
                         .WithMany("Bookings")
                         .HasForeignKey("staffId");
                 });

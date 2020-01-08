@@ -9,22 +9,22 @@ using ThAmCo.Events.Data;
 
 namespace ThAmCo.Events.Controllers
 {
-    public class StaffsController : Controller
+    public class StaffBookingsController : Controller
     {
         private readonly EventsDbContext _context;
 
-        public StaffsController(EventsDbContext context)
+        public StaffBookingsController(EventsDbContext context)
         {
             _context = context;
         }
 
-        // GET: Staffs
+        // GET: StaffBookings
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Staff.ToListAsync());
+            return View(await _context.StaffBooking.ToListAsync());
         }
 
-        // GET: Staffs/Details/5
+        // GET: StaffBookings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,40 +32,39 @@ namespace ThAmCo.Events.Controllers
                 return NotFound();
             }
 
-            var staff = await _context.Staff
+            var staffBooking = await _context.StaffBooking
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (staff == null)
+            if (staffBooking == null)
             {
                 return NotFound();
             }
 
-            return View(staff);
+            return View(staffBooking);
         }
 
-        // GET: Staffs/Create
+        // GET: StaffBookings/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Staffs/Create
+        // POST: StaffBookings/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StaffId,FirstName,SurName,Address,Contact,Email")] Staffs staff)
+        public async Task<IActionResult> Create([Bind("Id,Name,Location,Date")] StaffBookings staffBooking)
         {
-            
             if (ModelState.IsValid)
             {
-                _context.Add(staff);
+                _context.Add(staffBooking);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(staff);
+            return View(staffBooking);
         }
 
-        // GET: Staffs/Edit/5
+        // GET: StaffBookings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +72,22 @@ namespace ThAmCo.Events.Controllers
                 return NotFound();
             }
 
-            var staff = await _context.Staff.FindAsync(id);
-            if (staff == null)
+            var staffBooking = await _context.StaffBooking.FindAsync(id);
+            if (staffBooking == null)
             {
                 return NotFound();
             }
-            return View(staff);
+            return View(staffBooking);
         }
 
-        // POST: Staffs/Edit/5
+        // POST: StaffBookings/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StaffId,FirstName,SurName,Address,Contact,Email")] Staffs staff)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Location,Date")] StaffBookings staffBooking)
         {
-            if (id != staff.Id)
+            if (id != staffBooking.Id)
             {
                 return NotFound();
             }
@@ -97,16 +96,15 @@ namespace ThAmCo.Events.Controllers
             {
                 try
                 {
-                    _context.Update(staff);
+                    _context.Update(staffBooking);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StaffExists(staff.Id))
+                    if (!StaffBookingExists(staffBooking.Id))
                     {
                         return NotFound();
                     }
-
                     else
                     {
                         throw;
@@ -114,10 +112,10 @@ namespace ThAmCo.Events.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(staff);
+            return View(staffBooking);
         }
 
-        // GET: Staffs/Delete/5
+        // GET: StaffBookings/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,30 +123,30 @@ namespace ThAmCo.Events.Controllers
                 return NotFound();
             }
 
-            var staff = await _context.Staff
+            var staffBooking = await _context.StaffBooking
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (staff == null)
+            if (staffBooking == null)
             {
                 return NotFound();
             }
 
-            return View(staff);
+            return View(staffBooking);
         }
 
-        // POST: Staffs/Delete/5
+        // POST: StaffBookings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var staff = await _context.Staff.FindAsync(id);
-            _context.Staff.Remove(staff);
+            var staffBooking = await _context.StaffBooking.FindAsync(id);
+            _context.StaffBooking.Remove(staffBooking);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StaffExists(int id)
+        private bool StaffBookingExists(int id)
         {
-            return _context.Staff.Any(e => e.Id == id);
+            return _context.StaffBooking.Any(e => e.Id == id);
         }
     }
 }

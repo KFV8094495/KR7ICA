@@ -5,12 +5,16 @@ using System.Threading.Tasks;
 
 namespace ThAmCo.Events.Data
 {
-    public class Staff
+    public class Staffs
     {
-        public int StaffId { get; set; }
-        public string StaffName { get; set; }
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string SurName { get; set; }
         public string  Address { get; set; }
-        public string  contact { get; set; }
+        public string  Contact { get; set; }
+        public string Email { get; set; }
+
+        public List<staffing> Bookings { get; set; }
     }
 
 }

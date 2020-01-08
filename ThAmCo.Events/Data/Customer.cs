@@ -21,8 +21,6 @@ namespace ThAmCo.Events.Data
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-
-
         public DateTime Birthday { get; set; }
 
         [Display(Name = "Nationality")]

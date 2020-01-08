@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ThAmCo.Events.Data;
 
 namespace ThAmCo.Events.Data.Migrations
 {
     [DbContext(typeof(EventsDbContext))]
-    partial class EventsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200108182946_UpdateStaff")]
+    partial class UpdateStaff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,25 +104,6 @@ namespace ThAmCo.Events.Data.Migrations
                         new { CustomerId = 1, EventId = 2, Attended = false },
                         new { CustomerId = 3, EventId = 2, Attended = false }
                     );
-                });
-
-            modelBuilder.Entity("ThAmCo.Events.Data.StaffBookings", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Attended");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<string>("Location");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StaffBooking");
                 });
 
             modelBuilder.Entity("ThAmCo.Events.Data.staffing", b =>

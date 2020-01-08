@@ -1,4 +1,4 @@
-﻿@model ThAmCo.Events.Data.Staff
+﻿@model ThAmCo.Events.Data.Staffs
 
 @{
     ViewData["Title"] = "Delete";
@@ -12,10 +12,16 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.StaffName)
+            @Html.DisplayNameFor(model => model.FirstName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.StaffName)
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SurName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SurName)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Address)
@@ -24,15 +30,19 @@
             @Html.DisplayFor(model => model.Address)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.contact)
+            @Html.DisplayNameFor(model => model.Contact)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.contact)
+            @Html.DisplayFor(model => model.Contact)
+        </dd>
+        @Html.DisplayNameFor(model => model.Email)
+        <dd>
+            @Html.DisplayFor(model => model.Email)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="StaffId" />
+        <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
         <a asp-action="Index">Back to List</a>
     </form>

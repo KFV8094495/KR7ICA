@@ -70,6 +70,8 @@ namespace ThAmCo.Events.Data
             }
         }
 
-        public DbSet<ThAmCo.Events.Data.Staff> Staff { get; set; }
+        public DbSet<ThAmCo.Events.Data.Staffs> Staff { get; set; }
+
+        public DbSet<ThAmCo.Events.Data.StaffBookings> StaffBooking { get; set; }
     }
 }
