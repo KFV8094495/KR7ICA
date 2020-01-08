@@ -220,7 +220,7 @@ namespace ThAmCo.Events.Controllers
                     client.BaseAddress = new System.Uri("http://localhost:23652");
                     client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
 
-                    var order = new VenueDto
+                    var booking = new VenueDto
                     {
                         
                         VenueCode = eventVenue.VenueCode,
@@ -230,11 +230,14 @@ namespace ThAmCo.Events.Controllers
                     };
 
                    //reservation / Create reservation
-                    HttpResponseMessage response = await client.PostAsJsonAsync("api/Reservation", order);
+                    HttpResponseMessage response = await client.PostAsJsonAsync("api/Reservations", booking);
 
                     //Need to change
-                    //_context.Update(eventVenue);
-                    //await _context.SaveChangesAsync();
+
+
+                        @event.VenueCode = booking.VenueCode;
+                        _context.Update(@event);
+                        await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -251,6 +254,8 @@ namespace ThAmCo.Events.Controllers
             }
             return View(eventVenue);
         }
+        
+        
 
 
         private bool EventExists(int id)

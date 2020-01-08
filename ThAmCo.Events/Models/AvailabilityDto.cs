@@ -24,6 +24,7 @@ namespace ThAmCo.Events.Models
         [Required]
         public int costPerHou { get; set; }
 
+
     }
 }
  

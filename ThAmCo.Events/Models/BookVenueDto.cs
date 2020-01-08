@@ -11,7 +11,6 @@ namespace ThAmCo.Events.Models
         [Required,DataType(DataType.Date)]
         public DateTime EventDate { get; set; }
 
-        [Required,MinLength(6), MaxLength(6)]
         public string VenueCode{ get; set; }
 
         public int  Id { get; set; }
