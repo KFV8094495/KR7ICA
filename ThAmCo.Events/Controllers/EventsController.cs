@@ -222,7 +222,7 @@ namespace ThAmCo.Events.Controllers
 
                     var booking = new VenueDto
                     {
-                        
+                      
                         VenueCode = eventVenue.VenueCode,
                         EventDate = @event.Date,
                         StaffId = "1"
@@ -232,8 +232,7 @@ namespace ThAmCo.Events.Controllers
                    //reservation / Create reservation
                     HttpResponseMessage response = await client.PostAsJsonAsync("api/Reservations", booking);
 
-                    //Need to change
-
+                    //Need to change 
 
                         @event.VenueCode = booking.VenueCode;
                         _context.Update(@event);
