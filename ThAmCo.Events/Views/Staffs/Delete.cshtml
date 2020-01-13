@@ -34,11 +34,13 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Contact)
-        </dd>
-        @Html.DisplayNameFor(model => model.Email)
-        <dd>
+       </dd>
+       <dt>
+            @Html.DisplayNameFor(model => model.Email)
+       </dt>
+       <dd>
             @Html.DisplayFor(model => model.Email)
-        </dd>
+       </dd>
     </dl>
     
     <form asp-action="Delete">

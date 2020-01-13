@@ -27,6 +27,13 @@ namespace ThAmCo.Events.Data
 
         public string VenueReference { get; set; }
 
+        public List<staffing> Staff { get; set; }
+
+        public string Menu { get; set; }
+
+        public decimal FoodCost { get; set; }
+
+        public decimal VenueCost { get; set; }
 
 
     }

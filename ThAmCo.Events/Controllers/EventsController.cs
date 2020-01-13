@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ThAmCo.Events.Data;
 using ThAmCo.Events.Models;
+using ThAmCo.Events.Models.ViewModels;
+using ThAmCo.Venues.Models;
 
 namespace ThAmCo.Events.Controllers
 {
@@ -147,6 +149,9 @@ namespace ThAmCo.Events.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+
+        //***************
         // GET: Events/Details/5
         public async Task<IActionResult> BookVenue(int? id)
         {
@@ -157,6 +162,11 @@ namespace ThAmCo.Events.Controllers
 
             var @event = await _context.Events
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            String eventType = @event.TypeId;
+            DateTime beginDate = @event.Date;
+            DateTime endDate = @event.Date.Add(@event.Duration.Value);
+
             if (@event == null)
             {
                 return NotFound();
@@ -191,71 +201,167 @@ namespace ThAmCo.Events.Controllers
             return View(@event);
         }
 
+        //************
 
         // POST: Events/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BookVenue(int id, [Bind("Id,VenueCode")] BookVenuedto eventVenue)
+        public async Task<IActionResult> BookVenue(int? eventId, string venueCode, string staffId)
         {
-            if (id != eventVenue.Id)
+            if (eventId == null || venueCode == null || staffId == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            HttpClient client = getClient("23652");
+
+            var @event = await _context.Events.FindAsync(eventId);
+
+            HttpResponseMessage getAvailability = await client.GetAsync("api/Availability?eventType=" + @event.TypeId
+                + "&beginDate=" + @event.Date.ToString("yyyy/MM/dd")
+                + "&endDate=" + @event.Date.ToString("yyyy/MM/dd"));
+
+            var availability = await getAvailability.Content.ReadAsAsync<IEnumerable<availabilityDto>>();
+
+            decimal venueCost = (decimal)availability.FirstOrDefault().costPerHou;
+            @event.VenueCost = venueCost * @event.Duration.Value.Hours;
+
+            @event.VenueReference = availability.FirstOrDefault().name;
+
+
+
+            _context.Update(@event);
+            await _context.SaveChangesAsync();
+
+            DateTime eventDate = @event.Date;
+
+            ReservationPostDto reservation = new ReservationPostDto();
+            reservation.EventDate = eventDate;
+            reservation.StaffId = staffId;
+            reservation.VenueCode = venueCode;
+
+            string reference = venueCode + eventDate.ToString("yyyyMMdd");
+            HttpResponseMessage delete = await client.DeleteAsync("api/reservations/" + reference);
+            HttpResponseMessage post = await client.PostAsJsonAsync("api/reservations", reservation);
+
+            if (post.IsSuccessStatusCode)
             {
-                try
+
+                HttpResponseMessage getReservation = await client.GetAsync("api/reservations/" + reference);
+                var x = await getReservation.Content.ReadAsAsync<Event>();
+                return View("Reservation", x);
+            }
+            else
+            {
+                return RedirectToAction(nameof(BookVenue), eventId);
+            }
+
+        }
+
+
+        //AVILABLE
+        public async Task<IActionResult> AvailableMenus(int? eventid)
+        {
+            if (eventid == null)
+            {
+                return BadRequest();
+            }
+
+            var availableMenus = new List<Menu>().AsEnumerable();
+
+            HttpClient client = getClient("32824");
+
+            HttpResponseMessage response = await client.GetAsync("api/Menus");
+
+            if (response.IsSuccessStatusCode)
+            {
+                availableMenus = await response.Content.ReadAsAsync<IEnumerable<Menu>>();
+
+                if (availableMenus.Count() == 0)
                 {
-                    var @event = await _context.Events
-                        .FirstOrDefaultAsync(m => m.Id == id);
-                    if (@event == null)
-                    {
-                        return NotFound();
-                    }
-
-                    // Slide 6
-                    HttpClient client = new HttpClient();
-                    client.BaseAddress = new System.Uri("http://localhost:23652");
-                    client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
-                    var booking = new VenueDto
-                    {
-                      
-                        VenueCode = eventVenue.VenueCode,
-                        EventDate = @event.Date,
-                        StaffId = "1"
-
-                    };
-
-                   //reservation / Create reservation
-                    HttpResponseMessage response = await client.PostAsJsonAsync("api/Reservations", booking);
-
-                    //Need to change 
-
-                        @event.VenueCode = booking.VenueCode;
-                        _context.Update(@event);
-                        await _context.SaveChangesAsync();
+                    Debug.WriteLine("No available venues");
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EventExists(eventVenue.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+            }
+            else
+            {
+                Debug.WriteLine("Recieved a bad response from service");
+            }
+
+            ViewData["EventId"] = eventid;
+
+            return View(availableMenus);
+        }
+
+
+        //BOOKMENUE
+        public async Task<IActionResult> BookMenu(int? eventid, int? menuid)
+        {
+            if (eventid == null || menuid == null)
+            {
+                return BadRequest();
+            }
+            var @event = await _context.Events.FindAsync(eventid);
+
+            HttpClient client = getClient("32824");
+
+            HttpResponseMessage response = await client.GetAsync("api/Menus/" + menuid);
+            Menu menu = await response.Content.ReadAsAsync<Menu>();
+
+            @event.Menu = menu.Starter + " | " + menu.Main + " | " + menu.Dessert;
+            @event.FoodCost = menu.Cost;
+
+            _context.Update(@event);
+            await _context.SaveChangesAsync();
+
+            FoodBookingDto booking = new FoodBookingDto();
+            booking.EventId = (int)eventid;
+            booking.MenuId = (int)menuid;
+
+            HttpResponseMessage delete = await client.DeleteAsync("api/bookings/" + eventid);
+            HttpResponseMessage post = await client.PostAsJsonAsync("api/bookings", booking);
+
+            if (post.IsSuccessStatusCode)
+            {
+                HttpResponseMessage getBooking = await client.GetAsync("api/foodmenus/" + menuid);
+                var x = await getBooking.Content.ReadAsAsync<Menu>();
+                ViewData["EventId"] = eventid;
+                return View("BookMenu", x);
+            }
+            else
+            {
                 return RedirectToAction(nameof(Index));
             }
-            return View(eventVenue);
-        }
-        
-        
 
+        }
+
+        //Cancel MENUE
+        public async Task<IActionResult> CancelMenu(int? eventid)
+        {
+            if (eventid == null)
+            {
+                return BadRequest();
+            }
+
+            var @event = await _context.Events.FindAsync(eventid);
+            @event.FoodCost = 0;
+            @event.Menu = null;
+
+            _context.Update(@event);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id = eventid });
+        }
+
+        private HttpClient getClient(string port)
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new System.Uri("http://localhost:" + port);
+            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+            return client;
+        }
 
         private bool EventExists(int id)
         {
@@ -263,3 +369,4 @@ namespace ThAmCo.Events.Controllers
         }
     }
 }
+
