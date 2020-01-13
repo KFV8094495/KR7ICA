@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ThAmCo.Events\ThAmCo.Events.csproj" />
+  </ItemGroup>
+
 </Project>

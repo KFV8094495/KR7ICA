@@ -4,10 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ThAmCo.Events.Models.ViewModels
+namespace ThAmCo.Catering.Models.ViewModels
 {
     public class Menu
     {
+        public readonly IEnumerable<object> Booking;
+
         [Required, Key]
         public int Id { get; set; }
 
@@ -19,5 +21,6 @@ namespace ThAmCo.Events.Models.ViewModels
         public string Dessert { get; set; }
 
         public decimal Cost { get; set; }
-    }
+      
+    } 
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ThAmCo.Catering.Models.ViewModels;
 using ThAmCo.Events.Data;
 using ThAmCo.Events.Models;
 using ThAmCo.Events.Models.ViewModels;
