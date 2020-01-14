@@ -33,7 +33,7 @@ namespace ThAmCo.Events.Controllers
             }
 
             var staffBooking = await _context.StaffBooking
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.StaffId == id);
             if (staffBooking == null)
             {
                 return NotFound();
@@ -45,6 +45,8 @@ namespace ThAmCo.Events.Controllers
         // GET: StaffBookings/Create
         public IActionResult Create()
         {
+            ViewData["StaffId"] = new SelectList(_context.Staff, "Id", "Email");
+            ViewData["EventId"] = new SelectList(_context.Events, "Id", "Title");
             return View();
         }
 
@@ -53,7 +55,7 @@ namespace ThAmCo.Events.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Location,Date")] StaffBookings staffBooking)
+        public async Task<IActionResult> Create([Bind("StaffId,EventId,Attended")] StaffBookings staffBooking)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +89,7 @@ namespace ThAmCo.Events.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Location,Date")] StaffBookings staffBooking)
         {
-            if (id != staffBooking.Id)
+            if (id != staffBooking.StaffId)
             {
                 return NotFound();
             }
@@ -101,7 +103,7 @@ namespace ThAmCo.Events.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StaffBookingExists(staffBooking.Id))
+                    if (!StaffBookingExists(staffBooking.StaffId))
                     {
                         return NotFound();
                     }
@@ -124,7 +126,7 @@ namespace ThAmCo.Events.Controllers
             }
 
             var staffBooking = await _context.StaffBooking
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.StaffId == id);
             if (staffBooking == null)
             {
                 return NotFound();
@@ -146,7 +148,7 @@ namespace ThAmCo.Events.Controllers
 
         private bool StaffBookingExists(int id)
         {
-            return _context.StaffBooking.Any(e => e.Id == id);
+            return _context.StaffBooking.Any(e => e.StaffId == id);
         }
     }
 }

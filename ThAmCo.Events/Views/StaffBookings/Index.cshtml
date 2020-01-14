@@ -13,13 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Staff)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Location)
+                @Html.DisplayNameFor(model => model.Event)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Date)
+                @Html.DisplayNameFor(model => model.Attended)
             </th>
             <th></th>
         </tr>
@@ -28,18 +28,18 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Staff.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Location)
+                @Html.DisplayFor(modelItem => item.Event.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Date)
+                @Html.DisplayFor(modelItem => item.Attended)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.ActionLink("Edit", "Edit", new { id = item.StaffId, eventId = item.EventId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.StaffId, eventId = item.EventId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.StaffId, eventId = item.EventId })
             </td>
         </tr>
 }
